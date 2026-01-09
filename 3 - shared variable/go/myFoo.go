@@ -26,9 +26,12 @@ func decrementing() {
 
 func main() {
 	// What does GOMAXPROCS do? What happens if you set it to 1?
-	runtime.GOMAXPROCS(2)    
+	// This controls the max number of parallell threads, which must be greater than 1 to
+	// achieve the "desired" error magic number
+	runtime.GOMAXPROCS(2)
 	
 	// TODO: Spawn both functions as goroutines
+	// This is GO's way of starting a new goroutine, which is equivalent to a thread.
 	go incrementing()
 	go decrementing()
 
