@@ -6,20 +6,27 @@
 
 int i = 0;
 
+int counter;
+pthread_mutex_t lock;
+
 // Note the return type: void*
 void* incrementingThreadFunction(){
+	pthread_mutex_lock(&lock);
 	// TODO: increment i 1_000_000 times
 	for (int k = 0; k < 1000000; k++) {
 		i++;
 	}
+	pthread_mutex_unlock(&lock);
 	return NULL;
 }
 
 void* decrementingThreadFunction(){
+	pthread_mutex_lock(&lock);
 	// TODO: decrement i 1_000_000 times
 	for (int k = 0; k < 1000000; k++) {
 		i--;
 	}
+	pthread_mutex_unlock(&lock);
 	return NULL;
 }
 
@@ -28,6 +35,7 @@ int main(){
 	// TODO: 
 	// start the two functions as their own threads using `pthread_create`
 	// Hint: search the web! Maybe try "pthread_create example"?
+	pthread_mutex_init(&lock, NULL);
 	
 	// Creates the two thread variables we will populate in the next two lines with pthread_create
 	pthread_t thread1;
@@ -46,6 +54,8 @@ int main(){
 	// These two lines pauses the main thread until both thread1 and thread2 is done
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
+
+	pthread_mutex_destroy(&lock);
 	
 	// The value varies, both negatively and positively of order 10^6
 	printf("The magic number is: %d\n", i);
