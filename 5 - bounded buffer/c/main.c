@@ -98,7 +98,6 @@ void* consumer(void* args){
 }
 
 int main(){ 
-	
 	struct BoundedBuffer* buf = buf_new(5);
 	
 	pthread_t producer_thr;
