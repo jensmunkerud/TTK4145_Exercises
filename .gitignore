@@ -1,2 +1,3 @@
 *.o
 "5 - bounded buffer/c/boundedbuffer"
+.DS_Store
