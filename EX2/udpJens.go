@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-func sendMessage(serverIP string, port int, msg string) error {
+func sendMessage(serverIP net.IP, port int, msg string) error {
 	addr := net.UDPAddr{
-		IP:   net.ParseIP(serverIP),
+		IP:   serverIP,
 		Port: port,
 	}
 
@@ -23,7 +23,6 @@ func sendMessage(serverIP string, port int, msg string) error {
 }
 
 func main() {
-
 	// Creates new empty IP st. we listen to ALL IP's on port 30000.
 	addr := net.UDPAddr{
 		IP:   net.IPv4zero, // 0.0.0.0
@@ -41,6 +40,12 @@ func main() {
 	// Creates a buffer we will populate with data from remote server
 	buffer := make([]byte, 1024)
 
+	serverAddr := net.UDPAddr{
+		IP:   net.IPv4zero,
+		Port: 20000, // Must be 20000
+	}
+
+	// Fetches server IP
 	for {
 		n, sender, err := conn.ReadFromUDP(buffer)
 		if err != nil {
@@ -50,9 +55,16 @@ func main() {
 
 		message := string(buffer[:n])
 		fmt.Printf("Received from %s: %s\n", sender.IP, message)
+		serverAddr.IP = sender.IP
+		break
+		// Breaks loop after obtaining server IP
+	}
 
-		// Sends message to server (Really at the delay of the server +1s)
-		time.Sleep(1)
-		sendMessage(sender.IP.String(), 20000, "yalla habibi")
+	// We now have server IP, and can now handle messages any way we want
+	for {
+		// Sends message to server
+		time.Sleep(1 * time.Second)
+		sendMessage(serverAddr.IP, serverAddr.Port, "yalla habibi")
+		fmt.Printf("Tried sending to %s\n", &serverAddr.IP)
 	}
 }
