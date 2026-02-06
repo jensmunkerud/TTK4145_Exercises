@@ -22,7 +22,6 @@ func main() {
 		cmd = exec.Command("osascript", "-e", `tell app "Terminal" to do script "cd `+wd+`; go run main.go"`)
 		fmt.Printf("Running command on MAC...\n")
 	case "linux":
-		wd, _ := os.Getwd()
 		cmd = exec.Command("gnome-terminal", "--", "go", "run", "main.go")
 		fmt.Printf("Running command on LINUX...\n")
 	default:
