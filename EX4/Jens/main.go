@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
 	"time"
@@ -16,9 +17,16 @@ func main() {
 	case "windows":
 		cmd = exec.Command("cmd", "/c", "start", "cmd", "/k", "go run main.go")
 		fmt.Printf("Running command on WINDOWS...\n")
-	case "linux", "darwin":
-		cmd = exec.Command("cmd", "/c", "start", "cmd", "/k", "go run main.go")
+	case "darwin":
+		wd, _ := os.Getwd()
+		cmd = exec.Command("osascript", "-e", `tell app "Terminal" to do script "cd `+wd+`; go run main.go"`)
 		fmt.Printf("Running command on MAC...\n")
+	case "linux":
+		cmd = exec.Command("sh", "-c", "go run main.go")
+		fmt.Printf("Running command on LINUX...\n")
+	default:
+		fmt.Printf("Unsupported OS: %s\n", runtime.GOOS)
+		return
 	}
 
 	cmd.Run()
