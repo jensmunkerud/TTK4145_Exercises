@@ -23,7 +23,7 @@ func main() {
 		fmt.Printf("Running command on MAC...\n")
 	case "linux":
 		wd, _ := os.Getwd()
-		cmd = exec.Command(`gnome-terminal -- go run main.go`)
+		cmd = exec.Command("gnome-terminal", "--", "go", "run", "main.go")
 		fmt.Printf("Running command on LINUX...\n")
 	default:
 		fmt.Printf("Unsupported OS: %s\n", runtime.GOOS)
