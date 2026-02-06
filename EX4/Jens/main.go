@@ -22,7 +22,8 @@ func main() {
 		cmd = exec.Command("osascript", "-e", `tell app "Terminal" to do script "cd `+wd+`; go run main.go"`)
 		fmt.Printf("Running command on MAC...\n")
 	case "linux":
-		cmd = exec.Command("sh", "-c", "go run main.go")
+		wd, _ := os.Getwd()
+		cmd = exec.Command(`gnome-terminal -- cd ` + wd + `; go run main.go`)
 		fmt.Printf("Running command on LINUX...\n")
 	default:
 		fmt.Printf("Unsupported OS: %s\n", runtime.GOOS)
