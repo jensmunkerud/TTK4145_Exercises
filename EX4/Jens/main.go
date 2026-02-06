@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
-	"os/exec"
-	"runtime"
+	"strconv"
 	"time"
 )
 
@@ -30,6 +30,33 @@ func main() {
 	}
 
 	cmd.Run()
+
+	i := 0
+	for {
+		// Open the file for appending (create if not exists)
+		// f, err := os.OpenFile("output.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644) // APPEND MODE
+		f, err := os.OpenFile("output.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644) // TRUNCATE MODE
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Write the counter as a string
+		_, err = f.WriteString(strconv.Itoa(i) + "\n")
+		if err != nil {
+			f.Close()
+			log.Fatal(err)
+		}
+		f.Close()
+
+		i++
+		time.Sleep(1 * time.Second)
+
+		content, err := os.ReadFile("output.txt")
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(string(content))
+	}
 }
 
 func primary() {

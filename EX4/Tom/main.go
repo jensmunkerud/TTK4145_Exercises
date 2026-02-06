@@ -42,10 +42,15 @@ func primary(file *os.File) {
 	switch runtime.GOOS {
 	case "windows":
 		cmd = exec.Command("cmd", "/c", "start", "cmd", "/k", "go run main.go -primary=false")
+		fmt.Printf("Running command on WINDOWS...\n")
 	case "darwin":
-		cmd = exec.Command("open", "-a", "Terminal", "go run main.go -primary=false")
+		wd, _ := os.Getwd()
+		cmd = exec.Command("osascript", "-e", `tell app "Terminal" to do script "cd `+wd+`; go run main.go -primary=false"`)
+		fmt.Printf("Running command on MAC...\n")
 	case "linux":
-		cmd = exec.Command("gnome-terminal", "--", "go run main.go -primary=false")
+		cmd = exec.Command("gnome-terminal", "--", "go", "run", "main.go", "-primary=false")
+		fmt.Printf("Running command on LINUX...\n")
+	default:
 	}
 
 	if cmd != nil {
@@ -62,7 +67,7 @@ func primary(file *os.File) {
 	} else {
 		count = 1
 	}
-	for{
+	for {
 		time.Sleep(1 * time.Second)
 		fmt.Println("Count:", count)
 		count++
